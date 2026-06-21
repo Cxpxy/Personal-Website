@@ -428,6 +428,8 @@ import { RouterLink } from 'vue-router'
   background-color: #151311;
   padding: 2.5rem 4rem;
   box-shadow: inset 30px 0 50px rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
 }
 
 .dossier-bg {
@@ -493,7 +495,8 @@ import { RouterLink } from 'vue-router'
   position: relative;
   z-index: 2;
   max-width: 600px;
-  margin: 0 auto;
+  margin: auto;
+  width: 100%;
 }
 
 .confidential-stamp {

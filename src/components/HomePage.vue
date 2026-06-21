@@ -62,9 +62,9 @@ import { RouterLink } from 'vue-router'
           
           <div class="action-buttons">
             <RouterLink to="/about" class="btn">ABOUT</RouterLink>
-            <a href="#" class="btn">EXPERIENCE</a>
-            <a href="#" class="btn">PROJECTS</a>
-            <a href="#" class="btn">CONTACT</a>
+            <RouterLink to="/experience" class="btn">EXPERIENCE</RouterLink>
+            <RouterLink to="/projects" class="btn">PROJECTS</RouterLink>
+            <RouterLink to="/contact" class="btn">CONTACT</RouterLink>
           </div>
 
           <div class="social-links">
