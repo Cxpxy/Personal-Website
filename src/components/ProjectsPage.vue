@@ -1,35 +1,113 @@
 <script setup>
+import { ref, computed, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
+import identificationOneImage from '../../Identification1.png'
+import identificationTwoImage from '../../Identification2.png'
+import labelImage from '../../labelIamge.png'
+import prefectImage from '../../perfect.png'
+import receiptopsImage from '../../receiptops.png'
+import registerImage from '../../register.png'
+import sftpgoImage from '../../sftpgo.png'
 
 const projects = [
   {
     id: '01',
-    title: 'Personal Website',
+    title: '服務地端遷移至雲端 GCP',
     status: 'DELIVERED',
     statusClass: 'delivered-stamp',
-    description: '以偵探檔案為主題的個人網站，使用 Vue 3 與 Vite 建置。結合 CSS 動畫與響應式設計，呈現獨特的視覺風格與互動體驗。',
-    tech: ['Vue 3', 'Vite', 'CSS3', 'Responsive Design'],
-    previewType: 'website'
-  },
-  {
-    id: '02',
-    title: 'Weather Dashboard',
-    status: 'ANALYZED',
-    statusClass: 'analyzed-stamp',
-    description: '即時天氣資訊儀表板，串接第三方氣象 API，提供多個城市的天氣預報與視覺化圖表展示。',
-    tech: ['Vue 3', 'API Integration', 'Chart.js'],
+    description: [
+      '主機管理、日常維運、監控告警',
+      '串接三方工具利用 UI 畫面，降低日常維運難度',
+      '撰寫網頁維運工具，提供給非技術同仁使用，提升團隊效率'
+    ],
+    screenshots: [
+      { src: sftpgoImage, label: 'SFTPGo' },
+      { src: prefectImage, label: 'Prefect' },
+      { src: receiptopsImage, label: 'ReceiptOps' }
+    ],
+    tech: ['GCP', 'Cloud Migration', 'Monitoring', 'Operations'],
     previewType: 'dashboard'
   },
   {
+    id: '02',
+    title: 'GKE 管理',
+    status: 'ANALYZED',
+    statusClass: 'analyzed-stamp',
+    description: [
+      'Helm 部屬模板化 + 版控',
+      '撰寫腳本搭配 Helm，節省 60% 部屬時間',
+      '優化架構降低 40% 營運成本'
+    ],
+    tech: ['GKE', 'Helm', 'Kubernetes', 'Automation'],
+    previewType: 'pipeline'
+  },
+  {
     id: '03',
-    title: 'CI/CD Pipeline',
+    title: '工地安全影像辨識',
     status: 'TESTED',
     statusClass: 'tested-stamp',
-    description: '自動化部屬流水線建置，整合 GitHub Actions 與 GKE，實現程式碼提交後的自動測試與部屬流程。',
-    tech: ['GitHub Actions', 'Docker', 'Kubernetes', 'GCP'],
-    previewType: 'pipeline'
+    description: [
+      '影像辨識 OpenCV、影像標註 LabelImg 和物件偵測 YOLOv8 訓練辨識模型',
+      'Python Flask + MySQL',
+      '樹莓派 Project'
+    ],
+    screenshots: [
+      { src: registerImage, label: 'Register' },
+      { src: identificationOneImage, label: 'Identification 1' },
+      { src: identificationTwoImage, label: 'Identification 2' },
+      { src: labelImage, label: 'Label Image' }
+    ],
+    tech: ['OpenCV', 'YOLOv8', 'Flask', 'MySQL', 'Raspberry Pi'],
+    previewType: 'website'
   }
 ]
+
+const activeProjectId = ref(projects[0].id)
+const activeScreenshotIndex = ref(0)
+const activeProject = computed(() => projects.find(p => p.id === activeProjectId.value) || projects[0])
+const activeScreenshots = computed(() => activeProject.value.screenshots || [])
+const currentScreenshot = computed(() => activeScreenshots.value[activeScreenshotIndex.value])
+
+function selectProject(projectId) {
+  activeProjectId.value = projectId
+  activeScreenshotIndex.value = 0
+}
+
+function showPreviousScreenshot() {
+  const total = activeScreenshots.value.length
+  if (!total) return
+
+  activeScreenshotIndex.value = (activeScreenshotIndex.value - 1 + total) % total
+}
+
+function showNextScreenshot() {
+  const total = activeScreenshots.value.length
+  if (!total) return
+
+  activeScreenshotIndex.value = (activeScreenshotIndex.value + 1) % total
+}
+
+const isModalOpen = ref(false)
+
+function openModal() {
+  isModalOpen.value = true
+  document.addEventListener('keydown', handleEscape)
+}
+
+function closeModal() {
+  isModalOpen.value = false
+  document.removeEventListener('keydown', handleEscape)
+}
+
+function handleEscape(e) {
+  if (e.key === 'Escape') {
+    closeModal()
+  }
+}
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleEscape)
+})
 </script>
 
 <template>
@@ -71,9 +149,34 @@ const projects = [
             <div class="tape tape-corner-tl"></div>
             <div class="tape tape-corner-br"></div>
             <div class="photo-placeholder">
-              <div class="code-icon">&lt;/&gt;</div>
+              <div v-if="currentScreenshot" class="tool-carousel board-carousel">
+                <button class="carousel-btn carousel-btn-prev" type="button" aria-label="Previous screenshot" @click="showPreviousScreenshot">
+                  ‹
+                </button>
+
+                <figure class="tool-preview-card">
+                  <button 
+                    class="image-preview-btn" 
+                    type="button" 
+                    :aria-label="`View enlarged ${currentScreenshot.label} preview`"
+                    @click="openModal"
+                  >
+                    <img :src="currentScreenshot.src" :alt="`${currentScreenshot.label} UI preview`">
+                  </button>
+                  <figcaption>{{ currentScreenshot.label }}</figcaption>
+                </figure>
+
+                <button class="carousel-btn carousel-btn-next" type="button" aria-label="Next screenshot" @click="showNextScreenshot">
+                  ›
+                </button>
+
+                <div class="carousel-counter">
+                  {{ activeScreenshotIndex + 1 }} / {{ activeScreenshots.length }}
+                </div>
+              </div>
+              <div v-else class="code-icon">&lt;/&gt;</div>
             </div>
-            <div class="photo-label">EVIDENCE: CODE</div>
+            <div class="photo-label">{{ currentScreenshot ? currentScreenshot.label : 'EVIDENCE: CODE' }}</div>
           </div>
         </div>
       </div>
@@ -89,87 +192,44 @@ const projects = [
           
           <h1 class="section-title">PROJECT</h1>
           <div class="header-section">
-            <!-- <div class="label">EXHIBIT A</div> -->
+            <div class="project-tabs" role="tablist">
+              <button 
+                v-for="project in projects" 
+                :key="project.id"
+                @click="selectProject(project.id)"
+                :class="['tab-btn', { active: activeProjectId === project.id }]"
+                :aria-selected="activeProjectId === project.id"
+                role="tab"
+              >
+                FILE {{ project.id }}
+              </button>
+            </div>
           </div>
 
           <div class="projects-list">
-            <div v-for="project in projects" :key="project.id" class="project-item">
-              <div class="project-number">{{ project.id }}</div>
+            <div class="project-item" :key="activeProject.id">
+              <div class="project-number">{{ activeProject.id }}</div>
               <div class="info-block project-card">
                 <div class="tape tape-top"></div>
-                <div :class="['stamp', project.statusClass]">{{ project.status }}</div>
+                <div :class="['stamp', activeProject.statusClass]">{{ activeProject.status }}</div>
                 
                 <div class="project-content-wrapper">
-                  <!-- Preview Card -->
-                  <div class="project-preview">
-                    <div class="preview-window">
-                      <div class="window-header">
-                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                      </div>
-                      <div class="window-body">
-                        <!-- Abstract UI based on previewType -->
-                        <div v-if="project.previewType === 'website'" class="abstract-ui website-ui">
-                          <div class="ui-nav"></div>
-                          <div class="ui-hero">
-                            <div class="ui-title"></div>
-                            <div class="ui-subtitle"></div>
-                          </div>
-                          <div class="ui-grid">
-                            <div class="ui-box"></div>
-                            <div class="ui-box"></div>
-                            <div class="ui-box"></div>
-                          </div>
-                        </div>
-                        
-                        <div v-if="project.previewType === 'dashboard'" class="abstract-ui dashboard-ui">
-                          <div class="ui-sidebar"></div>
-                          <div class="ui-main">
-                            <div class="ui-chart-bar">
-                              <div class="bar" style="height: 40%"></div>
-                              <div class="bar" style="height: 70%"></div>
-                              <div class="bar" style="height: 50%"></div>
-                              <div class="bar" style="height: 90%"></div>
-                              <div class="bar" style="height: 30%"></div>
-                            </div>
-                            <div class="ui-stats">
-                              <div class="stat-circle"></div>
-                              <div class="stat-line"></div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div v-if="project.previewType === 'pipeline'" class="abstract-ui pipeline-ui">
-                          <div class="node-group">
-                            <div class="node commit-node"></div>
-                            <div class="line"></div>
-                            <div class="node build-node"></div>
-                            <div class="line"></div>
-                            <div class="node deploy-node"></div>
-                          </div>
-                          <div class="terminal-lines">
-                            <div class="t-line"></div>
-                            <div class="t-line short"></div>
-                            <div class="t-line success"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
                   <!-- Text Details -->
                   <div class="project-details">
                     <div class="project-header">
-                      <h3 class="project-title">{{ project.title }}</h3>
+                      <h3 class="project-title">{{ activeProject.title }}</h3>
                     </div>
                     
                     <div class="project-body">
                       <div class="typewriter-text project-desc">
-                        <p>{{ project.description }}</p>
+                        <ul class="desc-list">
+                          <li v-for="(item, index) in activeProject.description" :key="index">{{ item }}</li>
+                        </ul>
                       </div>
                       
                       <div class="skill-strip">
-                        <span v-for="(t, index) in project.tech" :key="index">
-                          {{ t }}<template v-if="index < project.tech.length - 1"> • </template>
+                        <span v-for="(t, index) in activeProject.tech" :key="index">
+                          {{ t }}<template v-if="index < activeProject.tech.length - 1"> • </template>
                         </span>
                       </div>
                     </div>
@@ -182,6 +242,29 @@ const projects = [
         </div>
       </div>
     </main>
+
+    <!-- Enlarged Image Modal -->
+    <div 
+      v-if="isModalOpen" 
+      class="image-modal-backdrop" 
+      @click="closeModal"
+      role="dialog" 
+      aria-modal="true" 
+      :aria-label="`Enlarged view of ${currentScreenshot.label}`"
+    >
+      <div class="image-modal-content" @click.stop>
+        <button 
+          class="modal-close-btn" 
+          type="button" 
+          aria-label="Close enlarged view" 
+          @click="closeModal"
+        >
+          ×
+        </button>
+        <img :src="currentScreenshot.src" :alt="`${currentScreenshot.label} UI preview`" class="enlarged-image">
+        <div class="modal-label">{{ currentScreenshot.label }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -344,14 +427,14 @@ const projects = [
 
 .polaroid-card {
   position: absolute;
-  top: 55%;
-  left: 45%;
+  top: 56%;
+  left: 50%;
   transform: translate(-50%, -50%) rotate(3deg);
   background-color: #e0dcd3;
   padding: 15px 15px 40px 15px;
   box-shadow: 5px 10px 20px rgba(0,0,0,0.8);
   z-index: 5;
-  width: 220px;
+  width: 380px;
   transition: transform 0.3s ease;
 }
 
@@ -361,12 +444,13 @@ const projects = [
 
 .photo-placeholder {
   width: 100%;
-  height: 200px;
+  height: 280px;
   background-color: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #333;
+  overflow: hidden;
 }
 
 .code-icon {
@@ -539,6 +623,39 @@ const projects = [
   margin-bottom: 5px;
 }
 
+.project-tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: rgba(20, 18, 16, 0.6);
+  border: 1px solid #333;
+  color: #888;
+  padding: 8px 16px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.tab-btn:hover {
+  background: rgba(40, 36, 32, 0.8);
+  color: #c4c0b5;
+}
+
+.tab-btn.active {
+  background: rgba(20, 18, 16, 0.9);
+  border-color: #a40b0b;
+  color: #e0dcd3;
+  box-shadow: inset 0 0 10px rgba(164, 11, 11, 0.2);
+}
+
 .section-title {
   font-family: "Courier New", Courier, monospace;
   font-size: 3rem;
@@ -641,14 +758,17 @@ const projects = [
   display: flex;
   gap: 20px;
   margin-top: 10px;
+  align-items: stretch;
 }
 
 .project-preview {
-  flex: 0 0 200px;
+  flex: 1;
+  min-width: 0;
 }
 
 .project-details {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
@@ -658,7 +778,7 @@ const projects = [
   border: 1px solid #333;
   border-radius: 4px;
   overflow: hidden;
-  height: 140px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px rgba(0,0,0,0.5);
@@ -691,6 +811,177 @@ const projects = [
   background-color: #0a0a0a;
   padding: 10px;
   overflow: hidden;
+}
+
+.tool-carousel {
+  position: relative;
+  height: 100%;
+}
+
+.tool-preview-card {
+  position: relative;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #2f2a25;
+  border-radius: 3px;
+  background-color: #050505;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.7);
+}
+
+.tool-preview-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  opacity: 0.9;
+  filter: sepia(12%) contrast(1.06) brightness(0.88);
+}
+
+.tool-preview-card figcaption {
+  position: absolute;
+  left: 6px;
+  bottom: 5px;
+  padding: 2px 6px;
+  background: rgba(5, 5, 5, 0.78);
+  border: 1px solid rgba(212, 203, 179, 0.18);
+  color: #d4cbb3;
+  font-size: 0.6rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.image-preview-btn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.image-preview-btn img {
+  transition: transform 0.3s ease;
+}
+
+.image-preview-btn:hover img {
+  transform: scale(1.02);
+}
+
+/* Image Modal */
+.image-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.image-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #050505;
+  border: 1px solid #2f2a25;
+  border-radius: 4px;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+}
+
+.enlarged-image {
+  max-width: 100%;
+  max-height: calc(90vh - 4rem);
+  object-fit: contain;
+  filter: sepia(12%) contrast(1.06) brightness(0.88);
+}
+
+.modal-label {
+  margin-top: 1rem;
+  color: #d4cbb3;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: -1.5rem;
+  right: -1.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: #a40b0b;
+  color: #fff;
+  border: 2px solid #d4cbb3;
+  font-size: 2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  z-index: 1001;
+}
+
+.modal-close-btn:hover {
+  transform: scale(1.1);
+  background-color: #cc0000;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 34px;
+  height: 44px;
+  border: 1px solid rgba(212, 203, 179, 0.25);
+  background: rgba(5, 5, 5, 0.72);
+  color: #d4cbb3;
+  font-size: 2rem;
+  line-height: 1;
+  transform: translateY(-50%);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.carousel-btn:hover {
+  background: rgba(164, 11, 11, 0.78);
+  border-color: rgba(212, 203, 179, 0.55);
+  color: #fff4d8;
+}
+
+.carousel-btn-prev {
+  left: 10px;
+}
+
+.carousel-btn-next {
+  right: 10px;
+}
+
+.carousel-counter {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  z-index: 3;
+  padding: 2px 7px;
+  background: rgba(5, 5, 5, 0.78);
+  border: 1px solid rgba(212, 203, 179, 0.18);
+  color: #a09d96;
+  font-size: 0.65rem;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 /* Abstract UI: Website */
@@ -857,6 +1148,20 @@ const projects = [
   color: #c4c0b5;
   text-align: justify;
   margin: 0;
+}
+
+.desc-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.desc-list li {
+  margin-bottom: 8px;
+}
+
+.desc-list li:last-child {
+  margin-bottom: 0;
 }
 
 .skill-strip {

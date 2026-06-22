@@ -354,7 +354,6 @@ import { RouterLink } from 'vue-router'
   height: 320px;
   overflow: hidden;
   position: relative;
-  filter: grayscale(40%) contrast(1.1);
 }
 
 .suspect-photo {
@@ -366,8 +365,9 @@ import { RouterLink } from 'vue-router'
 .photo-filter {
   position: absolute;
   inset: 0;
-  background: linear-gradient(45deg, rgba(0,0,0,0.5), transparent);
+  background: linear-gradient(45deg, rgba(0,0,0,0.1), transparent);
   mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
 .photo-label {
