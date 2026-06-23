@@ -42,7 +42,7 @@ import { RouterLink } from 'vue-router'
             <div class="tape tape-top-left"></div>
             <div class="tape tape-top-right"></div>
             <div class="img-wrapper">
-              <img src="../assets/images/photo.jpg" alt="Chen Pin-Yin" class="portrait-img" />
+              <img src="../assets/images/photo2.jpg" alt="Chen Pin-Yin" class="portrait-img" />
               <div class="grain-overlay"></div>
             </div>
             <div class="card-text">SUBJECT: C.P.Y.</div>
@@ -69,9 +69,9 @@ import { RouterLink } from 'vue-router'
 
           <div class="social-links">
             <!-- <a href="#" class="social-icon" title="LinkedIn">IN</a> -->
-            <a href="#" class="social-icon" title="GitHub">GH</a>
+            <!-- <a href="https://github.com/Chenxpy/Construction-site-safety-image-recognition" class="social-icon" title="GitHub">GH</a> -->
             <!-- <a href="#" class="social-icon" title="Twitter">TW</a> -->
-            <a href="#" class="social-icon" title="Instagram">IG</a>
+            <!-- <a href="#" class="social-icon" title="Instagram">IG</a> -->
           </div>
         </div>
       </div>
