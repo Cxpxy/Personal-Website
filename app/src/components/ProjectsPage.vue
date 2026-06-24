@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import identificationOneImage from '../../Identification1.png'
-import identificationTwoImage from '../../Identification2.png'
-import labelImage from '../../labelIamge.png'
-import prefectImage from '../../perfect.png'
-import receiptopsImage from '../../receiptops.png'
-import registerImage from '../../register.png'
-import sftpgoImage from '../../sftpgo.png'
+import identificationOneImage from '../assets/images/Identification1.png'
+import identificationTwoImage from '../assets/images/Identification2.png'
+import labelImage from '../assets/images/labelIamge.png'
+import prefectImage from '../assets/images/perfect.png'
+import receiptopsImage from '../assets/images/receiptops.png'
+import registerImage from '../assets/images/register.png'
+import sftpgoImage from '../assets/images/sftpgo.png'
 
 const projects = [
   {

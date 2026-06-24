@@ -25,5 +25,4 @@ dist-ssr
 *.sw
 .playwright-mcp/
 
-# photo images
-photo.jpg
+app/node_modules

@@ -151,7 +151,7 @@ import letstalkImage from '../assets/images/letstalk-cutout.png'
   text-shadow: 1px 1px 2px #000;
   background: rgba(0,0,0,0.5);
   padding: 5px 10px;
-  border: 1px solid #333;
+  border: none;
 }
 
 .back-link:hover {
