@@ -47,32 +47,24 @@ import { RouterLink } from 'vue-router'
             </div>
             <div class="card-text">SUBJECT: C.P.Y.</div>
           </div>
-        </div>
-      </div>
 
-      <div class="right-content">
-        <div class="intro">
-          <h1 class="headline">陳品吟</h1>
-          <div class="subtitle">
-            <h2>DevOps Engineer</h2>
-            <!-- <p>每條Message都是線索，每段LOG都能還原現場。</p>
-            <p>解開真相，只需要一點耐心與一支鍵盤。</p>
-            <p class="highlight">「我不抓兇手，我抓錯誤。」</p> -->
-          </div>
-          
-          <div class="action-buttons">
-            <RouterLink to="/about" class="btn">ABOUT</RouterLink>
-            <RouterLink to="/experience" class="btn">EXPERIENCE</RouterLink>
-            <RouterLink to="/projects" class="btn">PROJECTS</RouterLink>
-            <RouterLink to="/contact" class="btn">CONTACT</RouterLink>
-          </div>
-
-          <div class="social-links">
-            <!-- <a href="#" class="social-icon" title="LinkedIn">IN</a> -->
-            <!-- <a href="https://github.com/Chenxpy/Construction-site-safety-image-recognition" class="social-icon" title="GitHub">GH</a> -->
-            <!-- <a href="#" class="social-icon" title="Twitter">TW</a> -->
-            <!-- <a href="#" class="social-icon" title="Instagram">IG</a> -->
-          </div>
+          <!-- Navigation Links as Sticky Notes -->
+          <RouterLink to="/about" class="sticky-link link-1">
+            <div class="pin"></div>
+            <span>ABOUT</span>
+          </RouterLink>
+          <RouterLink to="/experience" class="sticky-link link-2">
+            <div class="pin"></div>
+            <span>EXPERIENCE</span>
+          </RouterLink>
+          <RouterLink to="/projects" class="sticky-link link-3">
+            <div class="pin"></div>
+            <span>PROJECTS</span>
+          </RouterLink>
+          <RouterLink to="/contact" class="sticky-link link-4">
+            <div class="pin"></div>
+            <span>CONTACT</span>
+          </RouterLink>
         </div>
       </div>
     </main>
@@ -133,12 +125,11 @@ import { RouterLink } from 'vue-router'
   min-height: 100vh;
 }
 
-/* Left Board */
+/* Left Board (Now Full Screen) */
 .left-board {
   flex: 1;
   position: relative;
   overflow: hidden;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .board-bg {
@@ -168,7 +159,7 @@ import { RouterLink } from 'vue-router'
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  max-width: 600px;
+  max-width: 800px;
   max-height: 800px;
   z-index: 1;
 }
@@ -243,7 +234,7 @@ import { RouterLink } from 'vue-router'
 .portrait-card {
   position: absolute;
   top: 50%;
-  left: 60%;
+  left: 50%;
   transform: translate(-50%, -50%) rotate(-2deg);
   background-color: #e8e4d9;
   padding: 15px 15px 40px 15px;
@@ -313,147 +304,77 @@ import { RouterLink } from 'vue-router'
   transform: rotate(45deg);
 }
 
-/* Right Content */
-.right-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 4rem 6rem;
-  background: linear-gradient(to right, #0a0a0a, #111);
-  position: relative;
-}
-
-.intro {
-  max-width: 500px;
-  animation: fadeIn 1.5s ease-out forwards;
-}
-
-.headline {
-  font-family: "Times New Roman", Times, serif;
-  font-size: 3.5rem;
-  line-height: 1.1;
-  margin-bottom: 2rem;
-  font-weight: normal;
-  color: #f5f5f5;
-}
-
-.subtitle {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 3rem;
-  color: #a09d96;
-}
-
-.subtitle p {
-  margin: 0 0 0.5rem 0;
-}
-
-.highlight {
-  color: #a40b0b;
-  font-style: italic;
-  display: inline-block;
-  margin-top: 1rem;
-}
-
-.action-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 4rem;
-}
-
-.btn {
-  display: inline-block;
-  padding: 1rem;
-  border: 1px solid rgba(224, 220, 211, 0.3);
-  color: #e0dcd3;
-  text-align: center;
-  font-size: 0.9rem;
-  letter-spacing: 2px;
-  transition: all 0.3s ease;
-  background: transparent;
-}
-
-.btn:hover {
-  border-color: #a40b0b;
-  background-color: rgba(164, 11, 11, 0.1);
-  color: #fff;
-}
-
-.social-links {
-  display: flex;
-  gap: 2rem;
-}
-
-.social-icon {
-  font-size: 0.9rem;
-  letter-spacing: 1px;
-  color: #666;
-  transition: color 0.3s ease;
-  position: relative;
-}
-
-.social-icon:hover {
-  color: #e0dcd3;
-}
-
-.social-icon::before {
-  content: '';
+/* Sticky Note Links */
+.sticky-link {
   position: absolute;
-  top: 50%;
-  left: -15px;
-  width: 10px;
-  height: 1px;
-  background-color: #a40b0b;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #d4cbb3;
+  color: #1a1a1a;
+  padding: 1.5rem 2rem;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.5);
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  letter-spacing: 2px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  --rotation: 0deg;
+  transform: rotate(var(--rotation));
+  z-index: 5;
 }
 
-.social-icon:hover::before {
-  opacity: 1;
+.sticky-link:hover, .sticky-link:focus-visible {
+  transform: scale(1.1) rotate(var(--rotation));
+  box-shadow: 4px 8px 15px rgba(0,0,0,0.6);
+  background-color: #e8e4d9;
+  outline: 2px solid #a40b0b;
+  outline-offset: 4px;
+  z-index: 10;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.link-1 {
+  --rotation: -5deg;
+  top: 12%;
+  left: 30%;
+}
+
+.link-2 {
+  --rotation: 4deg;
+  background-color: #b8b09b;
+  top: 45%;
+  right: 8%;
+}
+
+.link-3 {
+  --rotation: -3deg;
+  background-color: #c5bfae;
+  bottom: 18%;
+  left: 12%;
+}
+
+.link-4 {
+  --rotation: 6deg;
+  bottom: 12%;
+  right: 25%;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .main-content {
-    flex-direction: column;
-  }
-  
-  .left-board {
-    min-height: 50vh;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  
-  .right-content {
-    padding: 4rem 2rem;
-  }
-  
   .header {
     padding: 1.5rem 2rem;
   }
-  
-  .headline {
-    font-size: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .evidence-collage {
+    transform: translate(-50%, -50%) scale(0.8);
   }
 }
 
 @media (max-width: 600px) {
-  .action-buttons {
-    grid-template-columns: 1fr;
+  .evidence-collage {
+    transform: translate(-50%, -50%) scale(0.65);
   }
   
   .portrait-card {
@@ -462,6 +383,12 @@ import { RouterLink } from 'vue-router'
   
   .img-wrapper {
     height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .evidence-collage {
+    transform: translate(-50%, -50%) scale(0.55);
   }
 }
 </style>
